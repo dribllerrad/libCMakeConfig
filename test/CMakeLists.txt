@@ -12,11 +12,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
     "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Alib)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Blib)
+add_subdirectory(Alib)
+add_subdirectory(Blib)
 #add_subdirectory(test)
 
-add_executable(test main.cpp) # ${CMAKE_CURRENT_SOURCE_DIR}/include/test_header.
+add_executable(test test/main.cpp) # ${CMAKE_CURRENT_SOURCE_DIR}/include/test_header.
                               # cpp)
 
 target_link_libraries(test PUBLIC Alib::Alib)

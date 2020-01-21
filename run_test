@@ -5,7 +5,7 @@ DIR=$SCRIPTPATH
 FDIR="$DIR/test/files"
 BUILD_DIR="$DIR/build"
 INSTALL_DIR="$DIR/build/install"
-CMLIST_DIR="$SCRIPTPATH/.."
+CMLIST_DIR="$DIR/test"
 
 RED='\033[0;31m'
 CYAN='\033[0;36m'
@@ -29,6 +29,8 @@ printf "CMLIST_DIR:\n\t${CYAN}$CMLIST_DIR${R}\n"
 # printf "INSTALL_DIR:\t${CYAN}$INSTALL_DIR${R}\n"
 # printf "CMLIST_DIR:	\t${CYAN}$CMLIST_DIR${R}\n"
 
+printf "\n\n"
+
 if [[ -d "$DIR/Alib" ]] 
 then
 	rm -vrf $DIR/Alib/
@@ -43,6 +45,9 @@ if [[ -d "$DIR/build" ]]
 then
 	rm -vrf $DIR/build/
 fi
+
+printf "\n\n"
+sleep 3
 
 # if [[ -d "test" ]] 
 # then
@@ -59,13 +64,20 @@ cp $FDIR/Blib.cpp $DIR/Blib/src/
 cp $FDIR/Alib.hpp $DIR/Alib/include/Alib
 cp $FDIR/Blib.hpp $DIR/Blib/include/Blib
 
-cmake -B ${BUILD_DIR} ${CMLIST_DIR}
+cp $DIR/test/CMakeLists.txt .
+
+cmake -B ${BUILD_DIR} .
+
+
+
 cmake --build ${BUILD_DIR} 
 cmake --install ${BUILD_DIR} --prefix ${INSTALL_DIR}
 
-if ${INSTALL_DIR}/test
+if ${INSTALL_DIR}/bin/test
 then
 	printf "${GREEN}SUCCESS:${R} All tests completed successfully."
 else
 	printf "${RED}ERROR:${R} The final executable failed with error $?."
 fi
+
+rm CMakeLists.txt

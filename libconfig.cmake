@@ -309,10 +309,10 @@ if(NOT WIN32)
   set(BoldWhite   	\"\${Esc}[1;37m\")
 endif()
 
-if(\${DEPENDENCY_LIST} STREQUAL \"\")
-	set(DEPENDENCY_MESSAGE \"None\")
-else()
+if(NOT \${DEPENDENCY_LIST} STREQUAL \"\")
 	set(DEPENDENCY_MESSAGE \${DEPENDENCY_LIST})
+else()
+	set(DEPENDENCY_MESSAGE \"None\")
 endif() 
 
 # Final summary
