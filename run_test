@@ -1,0 +1,71 @@
+#!/bin/bash
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+DIR=$SCRIPTPATH
+FDIR="$DIR/test/files"
+BUILD_DIR="$DIR/build"
+INSTALL_DIR="$DIR/build/install"
+CMLIST_DIR="$SCRIPTPATH/.."
+
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+R='\033[0m' # Reset (No Color)
+
+printf "Before changing directory...\n"
+printf "SCRIPTPATH:\n\t${CYAN}$SCRIPTPATH${R}\n"
+printf "DIR:\n\t${CYAN}$DIR${R}\n"
+printf "FDIR:\n\t${CYAN}$FDIR${R}\n"
+printf "BUILD_DIR:\n\t${CYAN}$BUILD_DIR${R}\n"
+printf "INSTALL_DIR:\n\t${CYAN}$INSTALL_DIR${R}\n"
+printf "CMLIST_DIR:\n\t${CYAN}$CMLIST_DIR${R}\n"
+
+# cd ${DIR}
+
+# printf "After changing directory...\n"
+# printf "DIR:		\t${CYAN}$DIR${R}\n"
+# printf "FDIR:		\t${CYAN}$FDIR${R}\n"
+# printf "BUILD_DIR:	\t${CYAN}$BUILD_DIR${R}\n"
+# printf "INSTALL_DIR:\t${CYAN}$INSTALL_DIR${R}\n"
+# printf "CMLIST_DIR:	\t${CYAN}$CMLIST_DIR${R}\n"
+
+if [[ -d "$DIR/Alib" ]] 
+then
+	rm -vrf $DIR/Alib/
+fi
+
+if [[ -d "$DIR/Blib" ]] 
+then
+	rm -vrf $DIR/Blib/
+fi
+
+if [[ -d "$DIR/build" ]] 
+then
+	rm -vrf $DIR/build/
+fi
+
+# if [[ -d "test" ]] 
+# then
+# 	rm test/
+# fi
+
+
+cmake -P $DIR/libconfig.cmake Blib
+cmake -P $DIR/libconfig.cmake Alib Blib
+
+# cp $FDIR/main.cpp $FDIR/CMakeLists.txt $DIR/test
+cp $FDIR/Alib.cpp $DIR/Alib/src/
+cp $FDIR/Blib.cpp $DIR/Blib/src/
+cp $FDIR/Alib.hpp $DIR/Alib/include/Alib
+cp $FDIR/Blib.hpp $DIR/Blib/include/Blib
+
+cmake -B ${BUILD_DIR} ${CMLIST_DIR}
+cmake --build ${BUILD_DIR} 
+cmake --install ${BUILD_DIR} --prefix ${INSTALL_DIR}
+
+if ${INSTALL_DIR}/test
+then
+	printf "${GREEN}SUCCESS:${R} All tests completed successfully."
+else
+	printf "${RED}ERROR:${R} The final executable failed with error $?."
+fi
