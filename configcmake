@@ -1,0 +1,28 @@
+#!/bin/bash
+
+usage()
+{
+	echo "Usage: "
+    echo -e "\tconfigcmake <library name> [<library dependencies>]"
+}
+
+if [[ "$#" < 1 ]]; then
+	echo "Error: too few arguments."
+	usage
+	exit 1
+fi
+
+LIB="$1"
+echo "Lib: $LIB"
+
+if [[ "$#" == 1 ]]; then
+	cmake -P ~/.local/share/libconfig.cmake $LIB
+
+	exit 0
+fi
+
+shift
+DEP="$@"
+
+cmake -P ~/.local/share/libconfig.cmake $LIB $DEP
+

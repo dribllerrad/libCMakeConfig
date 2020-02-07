@@ -85,17 +85,6 @@ cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 
 set(PROJECT_NAME @libconfig_library_name@)
 
-set(DEPENDENCY_LIST @libconfig_dependency_list@)
-if(NOT \${DEPENDENCY_LIST} STREQUAL \"\")
-	list(REMOVE_DUPLICATES \${DEPENDENCY_LIST})
-	set(ALIAS_DEPENDENCY_LIST \${DEPENDENCY_LIST})
-	list(LENGTH \${DEPENDENCY_LIST} NUMBER_OF_DEPENDENCIES)
-endif()
-
-if(NOT \${DEPENDENCY_LIST} STREQUAL \"\")
-	list(TRANSFORM ALIAS_DEPENDENCY_LIST REPLACE \"([^;]+)\" \"\\\\1::\\\\1\")
-endif() 
-
 project(
     \${PROJECT_NAME}
     VERSION 0.1.0.0
@@ -115,6 +104,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+set(DEPENDENCY_LIST @libconfig_dependency_list@)
+if(NOT \${DEPENDENCY_LIST} STREQUAL \"\")
+	list(REMOVE_DUPLICATES \${DEPENDENCY_LIST})
+	set(ALIAS_DEPENDENCY_LIST \${DEPENDENCY_LIST})
+	list(LENGTH \${DEPENDENCY_LIST} NUMBER_OF_DEPENDENCIES)
+endif()
+
+if(NOT \${DEPENDENCY_LIST} STREQUAL \"\")
+	list(TRANSFORM ALIAS_DEPENDENCY_LIST REPLACE \"([^;]+)\" \"\\\\1::\\\\1\")
+endif() 
+
 
 function(update_file path content)
     set(old_content \"\")
@@ -482,17 +483,29 @@ if(${argc} GREATER_EQUAL 4)
 		message("${BoldMagenta}Dependency List:\n${libconfig_dependency_list}${Reset}")
 	endif()
 
-	file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${lib_name})
-	file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/cmake)
-	file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/include)
-	file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/include/${lib_name})
-	file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/src)
+	file(MAKE_DIRECTORY ${lib_name})
+	file(MAKE_DIRECTORY ${lib_name}/cmake)
+	file(MAKE_DIRECTORY ${lib_name}/include)
+	file(MAKE_DIRECTORY ${lib_name}/include/${lib_name})
+	file(MAKE_DIRECTORY ${lib_name}/src)
 
 	string(CONFIGURE ${cmake_lists_text} cmake_lists_text_formatted @ONLY)
 
-	file(WRITE ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/CMakeLists.txt ${cmake_lists_text_formatted})
-	file(WRITE ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/cmake/${lib_name}Config.cmake.in ${lib_config_cmake_in})
-	file(WRITE ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/cmake/cmake_uninstall.cmake.in ${cmake_uninstall_in})
+	file(WRITE ${lib_name}/CMakeLists.txt ${cmake_lists_text_formatted})
+	file(WRITE ${lib_name}/cmake/${lib_name}Config.cmake.in ${lib_config_cmake_in})
+	file(WRITE ${lib_name}/cmake/cmake_uninstall.cmake.in ${cmake_uninstall_in})
+
+	# file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${lib_name})
+	# file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/cmake)
+	# file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/include)
+	# file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/include/${lib_name})
+	# file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/src)
+
+	# string(CONFIGURE ${cmake_lists_text} cmake_lists_text_formatted @ONLY)
+
+	# file(WRITE ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/CMakeLists.txt ${cmake_lists_text_formatted})
+	# file(WRITE ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/cmake/${lib_name}Config.cmake.in ${lib_config_cmake_in})
+	# file(WRITE ${CMAKE_CURRENT_LIST_DIR}/${lib_name}/cmake/cmake_uninstall.cmake.in ${cmake_uninstall_in})
 
 
 endif()
