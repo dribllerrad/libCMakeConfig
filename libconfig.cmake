@@ -105,17 +105,14 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(DEPENDENCY_LIST @libconfig_dependency_list@)
-if(NOT \${DEPENDENCY_LIST} STREQUAL \"\")
-	list(REMOVE_DUPLICATES \${DEPENDENCY_LIST})
+set(DEPENDENCY_LIST @libconfig_dependency_list@ )
+
+if(DEPENDENCY_LIST)
+	list(REMOVE_DUPLICATES DEPENDENCY_LIST)
 	set(ALIAS_DEPENDENCY_LIST \${DEPENDENCY_LIST})
-	list(LENGTH \${DEPENDENCY_LIST} NUMBER_OF_DEPENDENCIES)
-endif()
-
-if(NOT \${DEPENDENCY_LIST} STREQUAL \"\")
+	list(LENGTH DEPENDENCY_LIST NUMBER_OF_DEPENDENCIES)
 	list(TRANSFORM ALIAS_DEPENDENCY_LIST REPLACE \"([^;]+)\" \"\\\\1::\\\\1\")
-endif() 
-
+endif()
 
 function(update_file path content)
     set(old_content \"\")
@@ -177,7 +174,7 @@ target_sources(
 add_library(\${PROJECT_NAME}::\${LIBRARY_TARGET_NAME} ALIAS
             \${LIBRARY_TARGET_NAME})
 
-if(NOT \${DEPENDENCY_LIST} STREQUAL \"\")
+if(DEPENDENCY_LIST)
 	if(\${PUBLIC_HEADERS})
 		set(PUBLIC_PRIVATE PUBLIC)
 	else()
@@ -191,7 +188,7 @@ as \${PUBLIC_PRIVATE}
 
 	target_link_libraries(\${LIBRARY_TARGET_NAME} PRIVATE \${ALIAS_DEPENDENCY_LIST})
 	set(INHERITED_PUBLIC_INCLUDE_DIR \$<TARGET_PROPERTY:\${DEPENDENCY_LIST},INTERFACE_INCLUDE_DIRECTORIES>)
-endif(NOT \${DEPENDENCY_LIST} STREQUAL \"\")
+endif()
 
 target_include_directories(\${LIBRARY_TARGET_NAME}
     PUBLIC
@@ -310,7 +307,7 @@ if(NOT WIN32)
   set(BoldWhite   	\"\${Esc}[1;37m\")
 endif()
 
-if(NOT \${DEPENDENCY_LIST} STREQUAL \"\")
+if(DEPENDENCY_LIST)
 	set(DEPENDENCY_MESSAGE \${DEPENDENCY_LIST})
 else()
 	set(DEPENDENCY_MESSAGE \"None\")
@@ -420,9 +417,9 @@ get_filename_component(CURRENT_DIR \${CMAKE_CURRENT_LIST_FILE} PATH)
 include(CMakeFindDependencyMacro)
 
 set(LIBRARY_TARGET_NAME @LIBRARY_TARGET_NAME@)
-set(PROJECT_DEPENDENCY @PROJECT_DEPENDENCY@)
+set(PROJECT_DEPENDENCY @DEPENDENCY_LIST@)
 
-if(NOT \${PROJECT_DEPENDENCY} STREQUAL \"\")
+if(PROJECT_DEPENDENCY)
 	message(\"\n
 		+++++++++++++++++++++++++++++++++++++++
 		From \${LIBRARY_TARGET_NAME}Config.cmake
@@ -431,7 +428,7 @@ if(NOT \${PROJECT_DEPENDENCY} STREQUAL \"\")
 		+++++++++++++++++++++++++++++++++++++++\")
 	#find_dependency(\${PROJECT_DEPENDENCY} REQUIRED)
 	find_package(\${PROJECT_DEPENDENCY} REQUIRED)
-endif(NOT \${PROJECT_DEPENDENCY} STREQUAL \"\")
+endif()
 
 if(NOT TARGET \${LIBRARY_TARGET_NAME} AND NOT \${\${LIBRARY_TARGET_NAME}_BINARY_DIR})
   include(\${CURRENT_DIR}/\${LIBRARY_TARGET_NAME}Targets.cmake)
@@ -483,15 +480,26 @@ if(${argc} GREATER_EQUAL 4)
 		message("${BoldMagenta}Dependency List:\n${libconfig_dependency_list}${Reset}")
 	endif()
 
+	message(
+	"
+	libconfig_dependency_list: ${libconfig_dependency_list}
+	\"libconfig_dependency_list\": \"${libconfig_dependency_list}\"
+	"libconfig_dependency_list": "${libconfig_dependency_list}"
+	")
+
 	file(MAKE_DIRECTORY ${lib_name})
 	file(MAKE_DIRECTORY ${lib_name}/cmake)
 	file(MAKE_DIRECTORY ${lib_name}/include)
 	file(MAKE_DIRECTORY ${lib_name}/include/${lib_name})
 	file(MAKE_DIRECTORY ${lib_name}/src)
 
-	string(CONFIGURE ${cmake_lists_text} cmake_lists_text_formatted @ONLY)
+	file(WRITE ${lib_name}/CMakeLists.txt.in ${cmake_lists_text})
+	configure_file(${lib_name}/CMakeLists.txt.in ${lib_name}/CMakeLists.txt @ONLY)
+	file(REMOVE ${lib_name}/CMakeLists.txt.in)
 
-	file(WRITE ${lib_name}/CMakeLists.txt ${cmake_lists_text_formatted})
+	#string(CONFIGURE ${cmake_lists_text} cmake_lists_text_formatted @ONLY)
+
+	#file(WRITE ${lib_name}/CMakeLists.txt ${cmake_lists_text_formatted})
 	file(WRITE ${lib_name}/cmake/${lib_name}Config.cmake.in ${lib_config_cmake_in})
 	file(WRITE ${lib_name}/cmake/cmake_uninstall.cmake.in ${cmake_uninstall_in})
 
