@@ -4,8 +4,8 @@ cmake_minimum_required(VERSION 3.15)
 # Colorized Output Setup
 if(NOT WIN32)
   string(ASCII 27 Esc)
-  set(Reset 		"${Esc}[m")
-  set(Bold  		"${Esc}[1m")
+  set(Reset 		    "${Esc}[m")
+  set(Bold  		    "${Esc}[1m")
   set(Red         	"${Esc}[31m")
   set(Green       	"${Esc}[32m")
   set(Blue        	"${Esc}[34m")
@@ -239,16 +239,15 @@ install(EXPORT \${LIBRARY_TARGET_NAME}Targets
 
 ##############################################
 #[[
-Exporting from the build tree. Allows other projects in the build tree to use
-the library target without calling FindPackage().
+Exporting from the build tree. 
+This allows other projects in the build tree to use the library target without 
+calling FindPackage().
 ]]
 export(
 	TARGETS \${LIBRARY_TARGET_NAME} 
 	FILE \${CMAKE_CURRENT_BINARY_DIR}/\${LIBRARY_TARGET_NAME}Targets.cmake
 	NAMESPACE \${LIBRARY_TARGET_NAME}::
 )
-
-export(EXPORT \${LIBRARY_TARGET_NAME}Targets FILE \${CMAKE_CURRENT_BINARY_DIR}/\${LIBRARY_TARGET_NAME}Targets.cmake NAMESPACE \${LIBRARY_TARGET_NAME}::)
 
 #Create a ConfigVersion.cmake file
 include(CMakePackageConfigHelpers)
@@ -289,22 +288,22 @@ endif(NOT TARGET uninstall)
 # Colorized Output Setup
 if(NOT WIN32)
   string(ASCII 27 Esc)
-  set(Reset 		\"\${Esc}[m\")
-  set(Bold  		\"\${Esc}[1m\")
-  set(Red         	\"\${Esc}[31m\")
-  set(Green       	\"\${Esc}[32m\")
-  set(Blue        	\"\${Esc}[34m\")
-  set(Cyan        	\"\${Esc}[36m\")
-  set(Magenta     	\"\${Esc}[35m\")
-  set(Yellow      	\"\${Esc}[33m\")
-  set(White       	\"\${Esc}[37m\")
-  set(BoldRed     	\"\${Esc}[1;31m\")
-  set(BoldGreen   	\"\${Esc}[1;32m\")
-  set(BoldBlue    	\"\${Esc}[1;34m\")
-  set(BoldCyan    	\"\${Esc}[1;36m\")
-  set(BoldMagenta 	\"\${Esc}[1;35m\")
-  set(BoldYellow  	\"\${Esc}[1;33m\")
-  set(BoldWhite   	\"\${Esc}[1;37m\")
+  set(Reset         \"\${Esc}[m\")
+  set(Bold          \"\${Esc}[1m\")
+  set(Red           \"\${Esc}[31m\")
+  set(Green         \"\${Esc}[32m\")
+  set(Blue          \"\${Esc}[34m\")
+  set(Cyan          \"\${Esc}[36m\")
+  set(Magenta       \"\${Esc}[35m\")
+  set(Yellow        \"\${Esc}[33m\")
+  set(White         \"\${Esc}[37m\")
+  set(BoldRed       \"\${Esc}[1;31m\")
+  set(BoldGreen     \"\${Esc}[1;32m\")
+  set(BoldBlue      \"\${Esc}[1;34m\")
+  set(BoldCyan      \"\${Esc}[1;36m\")
+  set(BoldMagenta   \"\${Esc}[1;35m\")
+  set(BoldYellow    \"\${Esc}[1;33m\")
+  set(BoldWhite     \"\${Esc}[1;37m\")
 endif()
 
 if(DEPENDENCY_LIST)
