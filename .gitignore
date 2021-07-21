@@ -2,4 +2,10 @@ build*
 archive*
 Alib*
 Blib*
-.vscode
+
+!test/files/*
+
+# Ignore everything in the .vscode directory except launch.json which is used
+# to configure vscode's debugger
+**/.vscode/*
+!**/.vscode/launch.json 
