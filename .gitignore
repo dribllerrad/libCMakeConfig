@@ -4,6 +4,7 @@ Alib*
 Blib*
 
 !test/files/*
+CMakeLists.txt
 
 # Ignore everything in the .vscode directory except launch.json which is used
 # to configure vscode's debugger

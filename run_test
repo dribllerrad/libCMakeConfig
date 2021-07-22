@@ -20,15 +20,6 @@ printf "BUILD_DIR:\n\t${CYAN}$BUILD_DIR${R}\n"
 printf "INSTALL_DIR:\n\t${CYAN}$INSTALL_DIR${R}\n"
 printf "CMLIST_DIR:\n\t${CYAN}$CMLIST_DIR${R}\n"
 
-# cd ${DIR}
-
-# printf "After changing directory...\n"
-# printf "DIR:		\t${CYAN}$DIR${R}\n"
-# printf "FDIR:		\t${CYAN}$FDIR${R}\n"
-# printf "BUILD_DIR:	\t${CYAN}$BUILD_DIR${R}\n"
-# printf "INSTALL_DIR:\t${CYAN}$INSTALL_DIR${R}\n"
-# printf "CMLIST_DIR:	\t${CYAN}$CMLIST_DIR${R}\n"
-
 printf "\n\n"
 
 if [[ -d "$DIR/Alib" ]] 
@@ -47,18 +38,11 @@ then
 fi
 
 printf "\n\n"
-sleep 3
-
-# if [[ -d "test" ]] 
-# then
-# 	rm test/
-# fi
-
+#sleep 3
 
 cmake -P $DIR/libconfig.cmake Blib
 cmake -P $DIR/libconfig.cmake Alib Blib
 
-# cp $FDIR/main.cpp $FDIR/CMakeLists.txt $DIR/test
 cp $FDIR/Alib.cpp $DIR/Alib/src/
 cp $FDIR/Blib.cpp $DIR/Blib/src/
 cp $FDIR/Alib.hpp $DIR/Alib/include/Alib
@@ -68,16 +52,19 @@ cp $DIR/test/CMakeLists.txt .
 
 cmake -B ${BUILD_DIR} .
 
-
-
 cmake --build ${BUILD_DIR} 
 cmake --install ${BUILD_DIR} --prefix ${INSTALL_DIR}
 
+
 if ${INSTALL_DIR}/bin/test
 then
-	printf "${GREEN}SUCCESS:${R} All tests completed successfully."
+	printf "\n\n"
+	printf "${GREEN}SUCCESS:${R} All tests completed successfully.\n\n"
+	printf "Run ./cleanup to remove test artifacts.\n\n"
 else
-	printf "${RED}ERROR:${R} The final executable failed with error $?."
+	printf "${RED}ERROR:${R} The final executable failed with error $?.\n"
 fi
+
+printf "\n"
 
 rm CMakeLists.txt

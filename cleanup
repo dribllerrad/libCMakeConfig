@@ -2,8 +2,8 @@
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-DIR=${SCRIPTPATH%/*/*} 
-printf "$DIR"
+DIR=${SCRIPTPATH} 
+printf "DIR:\t$DIR"
 
 if [[ -d "$DIR/Alib" ]] 
 then
